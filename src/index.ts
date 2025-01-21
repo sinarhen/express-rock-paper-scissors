@@ -1,16 +1,16 @@
-import express, { Express, Request, Response , Application } from 'express';
-import dotenv from 'dotenv';
+import express, { Request, Response, Application } from "express"
+import dotenv from "dotenv"
 
-//For env File 
-dotenv.config();
+//For env File
+dotenv.config()
 
-const app: Application = express();
-const port = process.env.PORT || 8000;
+const app: Application = express()
+const port = process.env.PORT || 8000
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('index');
-});
+app.get("/", (req: Request, res: Response) => {
+  res.send("inde")
+})
 
 app.listen(port, () => {
-    console.log(`http://localhost:${port}`);
-});
+  console.log(`http://localhost:${port}`)
+})
