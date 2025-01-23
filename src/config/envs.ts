@@ -1,4 +1,4 @@
 export const envs = {
-  PORT: process.env.PORT || 8000,
-  WEBSOCKET_PORT: process.env.WEBSOCKET_PORT || 8080,
+  EXPRESS_PORT: Number(process.env.EXPRESS_PORT) || 8000,
+  WEBSOCKET_PORT: Number(process.env.WEBSOCKET_PORT) || 8080,
 }

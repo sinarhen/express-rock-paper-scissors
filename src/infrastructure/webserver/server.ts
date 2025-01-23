@@ -3,11 +3,12 @@ import http, { IncomingMessage } from "http"
 import { GameWebSocketController } from "@/adapters/websockets/GameWebSocketController"
 import { WebSocketServer } from "ws"
 import { gameService } from "@/composition-root"
+import { envs } from "@/config/envs"
 
 export default function serverConfig(app: Application) {
   const server = http.createServer(app)
 
-  const wss = new WebSocketServer({ port: 8080 })
+  const wss = new WebSocketServer({ port: envs.WEBSOCKET_PORT })
 
   const controller = new GameWebSocketController(gameService)
 
@@ -25,7 +26,7 @@ export default function serverConfig(app: Application) {
     console.error("WebSocket server error:", error)
   })
 
-  app.listen(8000, () => {
+  app.listen(envs.EXPRESS_PORT, () => {
     console.log("Server running on port 3000")
   })
 }
