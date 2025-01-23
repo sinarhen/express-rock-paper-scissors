@@ -3,29 +3,15 @@ import { IGameRepository } from "@/application/repositories/interfaces/IGameRepo
 import { useCasesImplementations } from "@/composition-root"
 import { GameWebSocketServer } from "@/infrastructure/types/gameWsServer"
 import {
+  GameJoinedResponse,
+  GameStartedResponse,
   GameWebSocket,
   RequestMessagePayload,
 } from "@/infrastructure/types/wsMessages"
-import { getGameRoomParams } from "@/infrastructure/webserver/websockets/getWsParams"
-import { handleJoin } from "./handlers/join"
-
-const createBroadcaster = ({
-  msg,
-  wss,
-  gameCode,
-}: {
-  msg: unknown
-  wss: GameWebSocketServer
-  gameCode: string
-}) => {
-  console.log(wss.clientRooms.get(gameCode))
-  const jsonData = JSON.stringify(msg)
-  wss.clientRooms.get(gameCode)?.forEach((client) => {
-    if (client?.readyState === 1) {
-      client.send(jsonData)
-    }
-  })
-}
+import { createBroadcaster } from "./utils/createBroadcaster"
+import { addClientToGameRoom } from "./utils/addToTheGameRoom"
+import { assignPlayerDataToWsClient } from "./utils/assignPlayerDataToWsClient"
+import { validateJoinedClientParams } from "./utils/validateJoinedClientParams"
 
 export function wsApi(
   wss: GameWebSocketServer,
@@ -33,44 +19,47 @@ export function wsApi(
 ) {
   wss.server.on("connection", (ws: GameWebSocket, req) => {
     try {
-      const { gameCode, playerName } = getGameRoomParams(req)
-      if (!gameCode) {
-        ws.close(1008, "Missing game code")
+      const validated = validateJoinedClientParams(req, ws)
+      if (!validated) {
         return
       }
-      if (!playerName) {
-        ws.close(1008, "Missing player name")
-        return
-      }
-      const clientRoom = wss.clientRooms.get(gameCode)
+      const { gameCode, playerName } = validated
 
-      if (clientRoom && clientRoom[0] && clientRoom[1]) {
-        ws.close(1008, "Game room is full")
+      const added = addClientToGameRoom(wss, ws, gameCode)
+      if (!added) {
         return
-      }
-      if (!clientRoom || !clientRoom[0]) {
-        wss.clientRooms.set(gameCode, [ws, undefined])
-      } else {
-        wss.clientRooms.set(gameCode, [clientRoom[0], ws])
       }
 
+      // Assign player data to the ws client
+      assignPlayerDataToWsClient(ws, playerName, gameCode)
+
+      // Broadcast to all clients in the room
       const broadcast = <TMessage>(msg: TMessage) =>
         createBroadcaster({ msg, wss, gameCode })
 
-      handleJoin({
-        gameCode,
-        gameRepository: deps.gameRepository,
-        playerName,
-        broadcast,
+      // Join to the game / If the room is full, start the game
+      const game = useCasesImplementations.game
+        .joinGame(deps.gameRepository)
+        .execute(playerName, gameCode)
+
+      broadcast<GameJoinedResponse>({
+        event: "gameJoined",
+        data: game,
       })
 
-      // If join is successful, set player name and game code on the ws object for later use
-      ws.playerName = playerName
-      ws.gameCode = gameCode
+      if (game.isRoomFilled) {
+        useCasesImplementations.game
+          .startGame(deps.gameRepository)
+          .execute(gameCode)
+
+        broadcast<GameStartedResponse>({
+          event: "gameStarted",
+          data: game,
+        })
+      }
 
       ws.on("message", (message) => {
         try {
-          console.log("Received message:", message.toString())
           const { command, data } = JSON.parse(
             message.toString(),
           ) as RequestMessagePayload

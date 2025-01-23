@@ -6,13 +6,15 @@ import {
   CreateGameUseCase,
   JoinGameUseCase,
   SetChoiceUseCase,
-  CompleteRoundUseCase,
+  CompleteRoundAndAnnounceTheWinnerUseCase,
   RequestRestartUseCase,
   DisconnectPlayerUseCase,
   ConnectPlayerUseCase,
+  StartGameUseCase,
+  StartCountdownUseCase,
+  ConfirmRestartUseCase,
 } from "@/application/useCases/game"
 import { IDatabase } from "./infrastructure/database/interfaces/IDatabase"
-import { ConfirmRestartUseCase } from "./application/useCases/game/ConfirmRestart"
 
 export const dbsImplementations = {
   inMemoryDb: () => new InMemoryDatabase(),
@@ -28,10 +30,14 @@ export const useCasesImplementations = {
     createGame: (repository: IGameRepository) =>
       new CreateGameUseCase(repository),
     joinGame: (repository: IGameRepository) => new JoinGameUseCase(repository),
+    startGame: (repository: IGameRepository) =>
+      new StartGameUseCase(repository),
+    startCountdown: (repository: IGameRepository) =>
+      new StartCountdownUseCase(repository),
     setChoice: (repository: IGameRepository) =>
       new SetChoiceUseCase(repository),
-    completeRound: (repository: IGameRepository) =>
-      new CompleteRoundUseCase(repository),
+    completeRoundAndAnnounceTheWinner: (repository: IGameRepository) =>
+      new CompleteRoundAndAnnounceTheWinnerUseCase(repository),
     requestRestart: (repository: IGameRepository) =>
       new RequestRestartUseCase(repository),
     disconnectPlayer: (repository: IGameRepository) =>

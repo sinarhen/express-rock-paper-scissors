@@ -31,13 +31,13 @@ export class GameMapper {
   private static toBaseDto(game: Game) {
     return {
       code: game.code,
-
       pastRounds: game.pastRounds.map((round) => ({
         player1: round.player1,
         player2: round.player2,
         winnerName: round.winnerName,
       })),
       isRoomFilled: game.isRoomFilled(),
+      status: game.getStatus(),
       canRestart: game.canRestart(),
     }
   }

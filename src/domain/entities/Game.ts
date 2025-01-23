@@ -1,4 +1,4 @@
-import { Choice } from "../types/Game"
+import { Choice, GameStatus, GameStatuses } from "../types/Game"
 import { PlayerStatuses } from "../types/Player"
 import Player from "./Player"
 
@@ -10,10 +10,36 @@ export type Round = {
 export default class Game {
   public player1: Player | null = null
   public player2: Player | null = null
+  private status: GameStatus = GameStatuses.WAITING_FOR_PLAYERS
 
   public pastRounds: Round[] = []
 
   constructor(public readonly code: string) {}
+
+  public startGame(): void {
+    if (!this.isRoomFilled()) {
+      throw new Error("Both players must join before starting the game")
+    }
+    this.status = GameStatuses.WAITING_FOR_CHOICES
+  }
+
+  public startCountdown(): void {
+    if (this.status !== GameStatuses.WAITING_FOR_CHOICES) {
+      throw new Error("Game must be waiting for choices to start the countdown")
+    }
+    this.status = GameStatuses.COUNTDOWN
+  }
+
+  public announceWinner(): void {
+    if (this.status !== GameStatuses.COUNTDOWN) {
+      throw new Error("Game must be in countdown to announce the winner")
+    }
+    this.status = GameStatuses.WINNER_ANNOUNCED
+  }
+
+  public getStatus(): GameStatus {
+    return this.status
+  }
 
   public isRoomFilled(): this is { player1: Player; player2: Player } {
     return (
@@ -37,7 +63,7 @@ export default class Game {
 
   public canRestart(): boolean {
     return (
-      this.isRoomFilled() &&
+      this.status === GameStatuses.WINNER_ANNOUNCED &&
       this.player1!.status === PlayerStatuses.REQUESTED_A_REMATCH &&
       this.player2!.status === PlayerStatuses.REQUESTED_A_REMATCH
     )
@@ -62,6 +88,11 @@ export default class Game {
   }
 
   public voteRestart(playerName: string): boolean {
+    if (this.status !== GameStatuses.WINNER_ANNOUNCED) {
+      throw new Error(
+        "Game must be in winner announced state to vote for restart",
+      )
+    }
     const player = this.findPlayerByName(playerName)
     if (!player) {
       throw new Error("Player not found")
@@ -74,6 +105,7 @@ export default class Game {
   public resetGame(): void {
     if (!this.isRoomFilled()) return
     this.resetPlayers()
+    this.status = GameStatuses.WAITING_FOR_CHOICES
   }
 
   private resetPlayers(): void {
@@ -89,7 +121,6 @@ export default class Game {
 
   public completeRound(): void {
     if (!this.areChoicesMade()) {
-      console.dir(this, { depth: null })
       throw new Error("Both players must make a choice to complete a round")
     }
     const winner = this.getWinner()
