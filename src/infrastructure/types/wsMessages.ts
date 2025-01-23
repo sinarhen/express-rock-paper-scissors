@@ -1,9 +1,6 @@
 import { WebSocket } from "ws"
 import { Choice } from "../../domain/types/Game"
-import {
-  GameProgressDto,
-  GameResultsDto,
-} from "@/infrastructure/dto/models/game"
+import { GameProgressDto, GameResultsDto } from "@/application/dto/models/game"
 
 export interface GameWebSocket extends WebSocket {
   gameCode?: string

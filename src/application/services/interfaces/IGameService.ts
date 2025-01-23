@@ -1,8 +1,5 @@
 import { Choice } from "@/domain/types/Game"
-import {
-  GameProgressDto,
-  GameResultsDto,
-} from "@/infrastructure/dto/models/game"
+import { GameProgressDto, GameResultsDto } from "@/application/dto/models/game"
 
 export interface IGameService {
   requestRestart(gameCode: string, playerName: string): GameResultsDto

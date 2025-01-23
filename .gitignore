@@ -10,5 +10,5 @@ yarn-error.log*
 
 .vscode/*
 
-dist/*
+build/*
 .idea/

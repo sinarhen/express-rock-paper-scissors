@@ -3,7 +3,7 @@ import { IGameRepository } from "@/application/repositories/interfaces/IGameRepo
 import generateSixCharCode from "../../utils/sixDigitCode"
 import Game from "@/domain/entities/Game"
 import Player from "@/domain/entities/Player"
-import { GameMapper } from "@/infrastructure/dto/mappers/Game"
+import { GameMapper } from "@/application/dto/mappers/Game"
 import { IGameService } from "../interfaces/IGameService"
 
 export class GameService implements IGameService {

@@ -16,7 +16,7 @@ export default [
     },
   },
   {
-    ignores: ["node_modules", "dist"],
+    ignores: ["node_modules", "build"],
   },
 
   pluginJs.configs.recommended,
