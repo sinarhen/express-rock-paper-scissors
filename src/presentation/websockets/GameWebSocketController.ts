@@ -76,6 +76,6 @@ export class GameWebSocketController {
 
     const message = error instanceof Error ? error.message : defaultMessage
     ws.send(JSON.stringify({ error: message }))
-    ws.close(1011, "Internal server error")
+    // ws.close(1011, "Internal server error")
   }
 }

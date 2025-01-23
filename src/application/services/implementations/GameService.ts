@@ -44,9 +44,13 @@ export class GameService implements IGameService {
 
   public completeRound(gameCode: string) {
     const game = this.validateGameExists(gameCode)
+
+    const mappedGame = GameMapper.toResultsDto(game)
+    // mapping here because we need to return the game before the round is completed
+
     game.completeRound()
-    const updatedGame = this.gameRepository.update(game)
-    return GameMapper.toResultsDto(updatedGame)
+    this.gameRepository.update(game)
+    return mappedGame
   }
 
   public requestRestart(gameCode: string, playerName: string) {

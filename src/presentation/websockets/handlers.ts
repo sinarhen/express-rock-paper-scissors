@@ -60,15 +60,11 @@ export const commandHandlers: {
         seconds: 3,
       })
       setTimeout(() => {
-        try {
-          const game = gameService.completeRound(ws.gameCode!)
-          broadcast<WinnerAnnouncedResponse>({
-            event: "winnerAnnounced",
-            data: game,
-          })
-        } catch (err) {
-          console.error("Error in final reveal:", err)
-        }
+        const game = gameService.completeRound(ws.gameCode!)
+        broadcast<WinnerAnnouncedResponse>({
+          event: "winnerAnnounced",
+          data: game,
+        })
       }, countdownTime * 1000)
     }
   },
