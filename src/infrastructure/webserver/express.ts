@@ -1,5 +1,7 @@
-import express, { Application } from "express"
+import express from "express"
 
-export default function expressConfig(app: Application) {
+export default function expressConfig() {
+  const app = express()
   app.use(express.json())
+  return app
 }
