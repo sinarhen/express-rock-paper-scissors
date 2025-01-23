@@ -85,6 +85,7 @@ export default class Game {
       throw new Error("Player not found")
     }
     player.status = PlayerStatuses.OUT_OF_GAME
+    player.score = 0
   }
 
   public voteRestart(playerName: string): boolean {
