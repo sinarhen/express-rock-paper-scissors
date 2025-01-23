@@ -1,6 +1,6 @@
 import express from "express"
-import { GameController } from "../../adapters/controllers/GameController"
 import { gameService } from "@/composition-root"
+import { GameController } from "@/adapters/controllers/GameController"
 
 export default function gameRouter() {
   const router = express.Router()
