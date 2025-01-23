@@ -1,4 +1,4 @@
-import { GameWebSocket } from "@/infrastructure/types/wsMessages"
+import { GameWebSocket } from "@/infrastructure/types/customWs"
 import { IncomingMessage } from "http"
 
 function getGameRoomParams(req: IncomingMessage) {

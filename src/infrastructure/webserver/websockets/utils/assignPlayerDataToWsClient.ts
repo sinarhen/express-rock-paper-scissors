@@ -1,4 +1,4 @@
-import { GameWebSocket } from "@/infrastructure/types/wsMessages"
+import { GameWebSocket } from "@/infrastructure/types/customWs"
 
 export const assignPlayerDataToWsClient = (
   ws: GameWebSocket,

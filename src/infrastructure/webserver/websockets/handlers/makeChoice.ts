@@ -6,7 +6,7 @@ import {
   GameUpdatedResponse,
   MakeChoiceMessage,
   WinnerAnnouncedResponse,
-} from "@/infrastructure/types/wsMessages"
+} from "@/infrastructure/types/wsMessage"
 
 export const makeChoice: CommandHandlerFunc<MakeChoiceMessage> = ({
   ws,

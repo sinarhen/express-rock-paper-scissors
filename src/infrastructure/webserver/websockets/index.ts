@@ -1,13 +1,13 @@
 import { commandHandlers } from "@/infrastructure/webserver/websockets/handlers"
 import { IGameRepository } from "@/application/repositories/interfaces/IGameRepository"
 import { useCasesImplementations } from "@/composition-root"
-import { GameWebSocketServer } from "@/infrastructure/types/gameWsServer"
+import { GameWebSocketServer } from "@/infrastructure/types/customWs"
 import {
   GameJoinedResponse,
   GameStartedResponse,
-  GameWebSocket,
   RequestMessagePayload,
-} from "@/infrastructure/types/wsMessages"
+} from "@/infrastructure/types/wsMessage"
+import { GameWebSocket } from "@/infrastructure/types/customWs"
 import { createBroadcaster } from "./utils/createBroadcaster"
 import { addClientToGameRoom } from "./utils/addToTheGameRoom"
 import { assignPlayerDataToWsClient } from "./utils/assignPlayerDataToWsClient"

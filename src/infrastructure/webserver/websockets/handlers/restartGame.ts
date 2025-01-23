@@ -4,7 +4,7 @@ import {
   GameStartedResponse,
   GameWaitingForRestartResponse,
   RestartGameMessage,
-} from "@/infrastructure/types/wsMessages"
+} from "@/infrastructure/types/wsMessage"
 
 export const restartGame: CommandHandlerFunc<RestartGameMessage> = ({
   ws,

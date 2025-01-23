@@ -1,5 +1,5 @@
-import { GameWebSocketServer } from "@/infrastructure/types/gameWsServer"
-import { GameWebSocket } from "@/infrastructure/types/wsMessages"
+import { GameWebSocketServer } from "@/infrastructure/types/customWs"
+import { GameWebSocket } from "@/infrastructure/types/customWs"
 
 export const addClientToGameRoom = (
   wss: GameWebSocketServer,

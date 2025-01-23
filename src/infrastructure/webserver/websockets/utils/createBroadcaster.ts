@@ -1,4 +1,4 @@
-import { GameWebSocketServer } from "@/infrastructure/types/gameWsServer"
+import { GameWebSocketServer } from "@/infrastructure/types/customWs"
 
 export const createBroadcaster = ({
   msg,

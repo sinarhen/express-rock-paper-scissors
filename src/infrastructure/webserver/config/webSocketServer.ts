@@ -1,7 +1,7 @@
 import { envs } from "@/config/envs"
 import { WebSocketServer } from "ws"
 import { Server, IncomingMessage } from "http"
-import { GameWebSocketServer } from "@/infrastructure/types/gameWsServer"
+import { GameWebSocketServer } from "@/infrastructure/types/customWs"
 
 export function webSocketServerConfig(server: Server): GameWebSocketServer {
   const wss = new WebSocketServer({ port: envs.WEBSOCKET_PORT })

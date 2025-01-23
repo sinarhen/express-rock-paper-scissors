@@ -1,5 +1,5 @@
 import { CommandHandlerFunc } from "@/infrastructure/types/commandHandler"
-import { RequestMessagePayload } from "@/infrastructure/types/wsMessages"
+import { RequestMessagePayload } from "@/infrastructure/types/wsMessage"
 import { makeChoice } from "./makeChoice"
 import { restartGame } from "./restartGame"
 export const commandHandlers: {

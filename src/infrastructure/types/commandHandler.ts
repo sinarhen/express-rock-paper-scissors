@@ -1,5 +1,6 @@
 import { IGameRepository } from "@/application/repositories/interfaces/IGameRepository"
-import { GameWebSocket, RequestMessagePayload } from "./wsMessages"
+import { RequestMessagePayload } from "./wsMessage"
+import { GameWebSocket } from "./customWs"
 
 export interface CommandHandlerDeps {
   ws: GameWebSocket
