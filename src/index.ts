@@ -1,5 +1,5 @@
-import expressConfig from "./infrastructure/webserver/express"
-import serverConfig from "./infrastructure/webserver/server"
+import expressConfig from "./infrastructure/webserver/config/express"
+import serverConfig from "./infrastructure/webserver/config/server"
 import api from "./infrastructure/webserver/routes"
 import dotenv from "dotenv"
 import {
@@ -7,7 +7,7 @@ import {
   repositoriesImplementations,
 } from "./composition-root"
 import { wsApi } from "./infrastructure/webserver/websockets"
-import { webSocketServerConfig } from "./infrastructure/webserver/webSocketServer"
+import { webSocketServerConfig } from "./infrastructure/webserver/config/webSocketServer"
 
 dotenv.config({
   path: process.env.NODE_ENV === "test" ? "dev.env" : "prod.env",
