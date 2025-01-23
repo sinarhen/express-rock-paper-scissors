@@ -1,8 +1,9 @@
+import { IGameRepository } from "@/application/repositories/interfaces/IGameRepository"
+import { useCasesImplementations } from "@/composition-root"
 import { Request, Response } from "express"
-import { IGameService } from "@/application/services/interfaces/IGameService"
 
 export class GameController {
-  constructor(private gameService: IGameService) {}
+  constructor(private readonly gameRepository: IGameRepository) {}
 
   public createGame = (req: Request, res: Response) => {
     try {
@@ -12,7 +13,10 @@ export class GameController {
         return
       }
 
-      const gameCode = this.gameService.createGame()
+      const gameCode = useCasesImplementations.game
+        .createGame(this.gameRepository)
+        .execute()
+        
       res.status(201).json({
         code: gameCode,
       })

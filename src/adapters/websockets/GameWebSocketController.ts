@@ -6,13 +6,13 @@ import {
 } from "@/infrastructure/types/wsMessages"
 import { WebSocketServer } from "ws"
 import { commandHandlers } from "./handlers"
-import { IGameService } from "@/application/services/interfaces/IGameService"
-import { gameService } from "@/composition-root"
 import { getRequiredParamsFromReq } from "@/infrastructure/utils/validateWsParams"
 import { IncomingMessage } from "http"
+import { IGameRepository } from "@/application/repositories/interfaces/IGameRepository"
+import { useCasesImplementations } from "@/composition-root"
 
 export class GameWebSocketController {
-  constructor(private readonly gameService: IGameService) {}
+  constructor(private readonly gameRepository: IGameRepository) {}
 
   public registerHandlers(
     wss: WebSocketServer,
@@ -33,7 +33,9 @@ export class GameWebSocketController {
       ws.playerName = playerName
       ws.gameCode = gameCode
 
-      const game = gameService.joinGame(ws.playerName, ws.gameCode)
+      const game = useCasesImplementations.game
+        .joinGame(this.gameRepository)
+        .execute(playerName, gameCode)
 
       const broadcast = <TMessage>(data: TMessage) => {
         const jsonData = JSON.stringify(data)
@@ -64,7 +66,9 @@ export class GameWebSocketController {
 
       ws.on("close", () => {
         if (ws.playerName) {
-          this.gameService.disconnectPlayer(gameCode, ws.playerName)
+          useCasesImplementations.game
+            .disconnectPlayer(this.gameRepository)
+            .execute(gameCode, ws.playerName)
         }
       })
     } catch (error) {
@@ -95,7 +99,6 @@ export class GameWebSocketController {
       }
 
       handler({
-        gameService: this.gameService,
         ws,
         data,
         broadcast,

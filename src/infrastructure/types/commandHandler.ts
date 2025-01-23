@@ -1,10 +1,10 @@
-import { IGameService } from "@/application/services/interfaces/IGameService"
+import { IGameRepository } from "@/application/repositories/interfaces/IGameRepository"
 import { GameWebSocket, RequestMessagePayload } from "./wsMessages"
 
 export interface CommandHandlerDeps {
   ws: GameWebSocket
-  gameService: IGameService
-  broadcast<T>(msg: T): void
+  gameRepository: IGameRepository
+  broadcast: <TMessage>(data: TMessage) => void
   setCurrentPlayerName?: (playerName: string) => void
 }
 

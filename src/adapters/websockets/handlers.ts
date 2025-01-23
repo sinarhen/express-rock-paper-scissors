@@ -1,3 +1,4 @@
+import { useCasesImplementations } from "@/composition-root"
 import { CommandHandlerFunc } from "@/infrastructure/types/commandHandler"
 import {
   RequestMessagePayload,
@@ -13,12 +14,15 @@ export const commandHandlers: {
     Extract<RequestMessagePayload, { command: K }>
   >
 } = {
-  makeChoice: ({ ws, data, gameService, broadcast }) => {
+  makeChoice: ({ ws, data, gameRepository, broadcast }) => {
     if (!ws.playerName || !ws.gameCode) {
       throw new Error("You need to join the game first!")
     }
     const { choice } = data
-    const game = gameService.setChoice(ws.gameCode, ws.playerName, choice)
+    
+    const game = useCasesImplementations.game
+      .setChoice(gameRepository)
+      .execute(ws.gameCode, ws.playerName, choice)
 
     if (!game.isRoomFilled)
       throw new Error("Wait for the other player, please!")
@@ -36,7 +40,9 @@ export const commandHandlers: {
         seconds: 3,
       })
       setTimeout(() => {
-        const game = gameService.completeRound(ws.gameCode!)
+        const game = useCasesImplementations.game
+          .completeRound(gameRepository)
+          .execute(ws.gameCode!)
         broadcast<WinnerAnnouncedResponse>({
           event: "winnerAnnounced",
           data: game,
@@ -44,14 +50,19 @@ export const commandHandlers: {
       }, countdownTime * 1000)
     }
   },
-  restartGame: ({ ws, gameService, broadcast }) => {
+  restartGame: ({ ws, gameRepository, broadcast }) => {
     if (!ws.playerName || !ws.gameCode) {
       throw new Error("You need to join the game first!")
     }
-    const restarted = gameService.requestRestart(ws.gameCode, ws.playerName)
+    const restarted = useCasesImplementations.game
+      .requestRestart(gameRepository)
+      .execute(ws.gameCode, ws.playerName)
 
     if (restarted) {
-      const game = gameService.getGame(ws.gameCode)
+      const game = useCasesImplementations.game
+        .getGame(gameRepository)
+        .execute(ws.gameCode)
+
       broadcast<GameStartedResponse>({
         event: "gameStarted",
         data: game,

@@ -1,12 +1,11 @@
 import express from "express"
-import { gameService } from "@/composition-root"
 import { GameController } from "@/adapters/controllers/GameController"
+import { IGameRepository } from "@/application/repositories/interfaces/IGameRepository"
 
-export default function gameRouter() {
+export default function gameRouter(gameRepository: IGameRepository) {
   const router = express.Router()
 
-  // inject game service dependency
-  const controller = new GameController(gameService)
+  const controller = new GameController(gameRepository)
 
   // POST enpdpoints
   router.route("/create").post(controller.createGame)
