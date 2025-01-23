@@ -17,10 +17,11 @@ export default class Game {
 
   public isRoomFilled(): this is { player1: Player; player2: Player } {
     return (
-      (!!this.player1 && !!this.player2) ||
-      (this.player1?.status !== PlayerStatuses.OUT_OF_GAME &&
-        this.player2?.status !== PlayerStatuses.OUT_OF_GAME)
-    )
+      !!this.player1 &&
+      !!this.player2 &&
+      this.player1.status !== PlayerStatuses.OUT_OF_GAME &&
+      this.player2.status !== PlayerStatuses.OUT_OF_GAME
+    );
   }
 
   public areChoicesMade(): this is {
@@ -30,9 +31,6 @@ export default class Game {
     return !!this.player1?.choice && !!this.player2?.choice
   }
 
-  public canAddPlayer(): boolean {
-    return !this.isRoomFilled()
-  }
 
   public canRestart(): boolean {
     return (
@@ -44,6 +42,7 @@ export default class Game {
 
   public addPlayer(player: Player): void {
     if (this.isRoomFilled()) {
+      console.dir(this, {depth: null})
       throw new Error("Game is full")
     }
     if (!this.player1) {

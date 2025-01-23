@@ -8,7 +8,7 @@ import { gameService } from "@/composition-root"
 export default function serverConfig(app: Application) {
   const server = http.createServer(app)
 
-  const wss = new WebSocketServer({ noServer: true })
+  const wss = new WebSocketServer({ port: 8080 })
 
   const controller = new GameWebSocketController(gameService)
 
@@ -40,5 +40,9 @@ export default function serverConfig(app: Application) {
 
   wss.on("error", (error) => {
     console.error("WebSocket server error:", error)
+  })
+
+  app.listen(8000, () => {
+    console.log("Server running on port 3000")
   })
 }
