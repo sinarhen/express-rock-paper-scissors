@@ -1,7 +1,7 @@
 import express from "express"
-import expressConfig from "./infrastructure/express"
-import serverConfig from "./infrastructure/server"
-import routes from "./infrastructure/routes"
+import expressConfig from "./infrastructure/webserver/express"
+import serverConfig from "./infrastructure/webserver/server"
+import routes from "./infrastructure/webserver/routes"
 
 const app = express()
 

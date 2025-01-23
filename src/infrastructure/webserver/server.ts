@@ -1,6 +1,6 @@
 import { Application } from "express"
 import http, { IncomingMessage } from "http"
-import { GameWebSocketController } from "@/frameworks/websockets/GameWebSocketController"
+import { GameWebSocketController } from "@/adapters/websockets/GameWebSocketController"
 import { WebSocketServer } from "ws"
 import { gameService } from "@/composition-root"
 
