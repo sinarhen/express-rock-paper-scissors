@@ -1,16 +1,15 @@
-import express, { Request, Response, Application } from "express"
-import dotenv from "dotenv"
+import express from "express"
+import expressConfig from "./infrastructure/express"
+import serverConfig from "./infrastructure/server"
+import routes from "./infrastructure/routes"
+import registerServices from "./application/factories"
 
-//For env File
-dotenv.config()
+const app = express()
 
-const app: Application = express()
-const port = process.env.PORT || 8000
+expressConfig(app)
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("inde")
-})
+const services = registerServices()
 
-app.listen(port, () => {
-  console.log(`http://localhost:${port}`)
-})
+serverConfig(app, { gameService: services.gameService })
+
+routes(app, { gameService: services.gameService })

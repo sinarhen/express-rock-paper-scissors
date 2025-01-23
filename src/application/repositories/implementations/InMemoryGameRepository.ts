@@ -1,5 +1,3 @@
-// src/infrastructure/repositories/InMemoryGameRepository.ts
-
 import Game from "@/domain/entities/Game"
 import { IGameRepository } from "../interfaces/IGameRepository"
 import { db } from "@/infrastructure/database"
