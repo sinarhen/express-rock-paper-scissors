@@ -1,8 +1,7 @@
 import { Application } from "express"
 import http, { IncomingMessage } from "http"
-import { GameWebSocketController } from "@/presentation/websockets/GameWebSocketController"
+import { GameWebSocketController } from "@/frameworks/websockets/GameWebSocketController"
 import { WebSocketServer } from "ws"
-import { getGameCodeFromRequest } from "./utils/validateWsParams"
 import { gameService } from "@/composition-root"
 
 export default function serverConfig(app: Application) {
@@ -14,28 +13,12 @@ export default function serverConfig(app: Application) {
 
   server.on("upgrade", (req: IncomingMessage, socket, head) => {
     wss.handleUpgrade(req, socket, head, (ws) => {
-      try {
-        const gameCode = getGameCodeFromRequest(req)
-        if (!gameCode) {
-          ws.close(1008, "Missing game code")
-          return
-        }
-
-        wss.emit("connection", ws, gameCode)
-      } catch (error) {
-        console.error("WebSocket upgrade error:", error)
-        socket.destroy()
-      }
+      wss.emit("connection", ws, req)
     })
   })
 
   wss.on("connection", (ws, req) => {
-    const gameCode = getGameCodeFromRequest(req)
-    if (!gameCode) {
-      ws.close(1008, "Missing game code")
-      return
-    }
-    controller.registerHandlers(wss, ws, gameCode)
+    controller.registerHandlers(wss, ws, req)
   })
 
   wss.on("error", (error) => {

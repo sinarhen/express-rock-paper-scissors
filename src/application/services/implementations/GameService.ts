@@ -45,12 +45,9 @@ export class GameService implements IGameService {
   public completeRound(gameCode: string) {
     const game = this.validateGameExists(gameCode)
 
-    const mappedGame = GameMapper.toResultsDto(game)
-    // mapping here because we need to return the game before the round is completed
-
     game.completeRound()
-    this.gameRepository.update(game)
-    return mappedGame
+    const updatedGame = this.gameRepository.update(game)
+    return GameMapper.toResultsDto(updatedGame)
   }
 
   public requestRestart(gameCode: string, playerName: string) {
@@ -58,9 +55,13 @@ export class GameService implements IGameService {
     if (!game.isRoomFilled()) {
       throw new Error("Game is not full")
     }
-    game.voteRestart(playerName)
-    const updatedGame = this.gameRepository.update(game)
-    return GameMapper.toResultsDto(updatedGame)
+    const canRestart = game.voteRestart(playerName)
+    if (canRestart) {
+      game.resetGame()
+    }
+    this.gameRepository.update(game)
+
+    return canRestart
   }
 
   public disconnectPlayer(gameCode: string, playerName: string): void {

@@ -1,5 +1,5 @@
 import express from "express"
-import { GameController } from "../../presentation/controllers/GameController"
+import { GameController } from "../../frameworks/controllers/GameController"
 import { gameService } from "@/composition-root"
 
 export default function gameRouter() {

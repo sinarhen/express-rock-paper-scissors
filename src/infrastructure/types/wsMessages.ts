@@ -43,7 +43,7 @@ interface GameUpdatedResponse {
 
 interface GameWaitingForRestartResponse {
   event: "gameWaitingForRestart"
-  data: GameResultsDto
+  // data: GameResultsDto
 }
 
 interface CountdownStartedResponse {

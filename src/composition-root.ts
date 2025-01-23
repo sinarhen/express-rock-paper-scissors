@@ -1,6 +1,6 @@
 import { InMemoryGameRepository } from "./application/repositories/implementations/InMemoryGameRepository"
 import { GameService } from "./application/services/implementations/GameService"
-import { InMemoryDatabase } from "./infrastructure/database/implementations/inMemory"
+import { InMemoryDatabase } from "./infrastructure/database/implementations/InMemoryDatabase"
 
 // Initializing this all as singletons for simplicity
 export const inMemoryDb = new InMemoryDatabase()

@@ -1,14 +1,17 @@
 import Game from "@/domain/entities/Game"
-import { playerToHiddenChoiceDto } from "../models/player"
 import { GameProgressDto, GameResultsDto } from "../models/game"
-import Player from "@/domain/entities/Player"
+import { PlayerMapper } from "./Player"
 
 export class GameMapper {
   public static toProgressDto(game: Game): GameProgressDto {
     return {
       ...this.toBaseDto(game),
-      player1: game.player1 ? playerToHiddenChoiceDto(game.player1) : null,
-      player2: game.player2 ? playerToHiddenChoiceDto(game.player2) : null,
+      player1: game.player1
+        ? PlayerMapper.toHiddenChoiceDto(game.player1)
+        : null,
+      player2: game.player2
+        ? PlayerMapper.toHiddenChoiceDto(game.player2)
+        : null,
     }
   }
 
@@ -19,8 +22,8 @@ export class GameMapper {
     const winner = game.getWinner()
     return {
       ...this.toBaseDto(game),
-      player1: { ...game.player1, score: this.getScore(game, game.player1) },
-      player2: { ...game.player2, score: this.getScore(game, game.player2) },
+      player1: game.player1,
+      player2: game.player2,
       winnerName: winner ? winner.name : null,
     }
   }
@@ -30,19 +33,12 @@ export class GameMapper {
       code: game.code,
 
       pastRounds: game.pastRounds.map((round) => ({
-        player1Choice: round.player1Choice,
-        player2Choice: round.player2Choice,
+        player1: round.player1,
+        player2: round.player2,
         winnerName: round.winnerName,
       })),
       isRoomFilled: game.isRoomFilled(),
       canRestart: game.canRestart(),
     }
-  }
-
-  private static getScore(game: Game, player: Player) {
-    const winner = game.getWinner()
-    return winner && player.name === winner.name
-      ? player.score + 1
-      : player.score
   }
 }

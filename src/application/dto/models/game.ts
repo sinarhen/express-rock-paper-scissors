@@ -1,16 +1,12 @@
-import { Choice } from "@/domain/types/Game"
 import { PlayerWithHiddenChoiceDto } from "./player"
 import Player from "@/domain/entities/Player"
+import { Round } from "@/domain/entities/Game"
 
 interface BastGameDto<TPlayer> {
   code: string
   player1: TPlayer
   player2: TPlayer
-  pastRounds: {
-    player1Choice: Choice
-    player2Choice: Choice
-    winnerName: string | null
-  }[]
+  pastRounds: Round[]
   isRoomFilled: boolean
   canRestart: boolean
 }

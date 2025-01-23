@@ -1,7 +1,6 @@
 import { CommandHandlerFunc } from "@/infrastructure/types/commandHandler"
 import {
   RequestMessagePayload,
-  GameJoinedResponse,
   GameStartedResponse,
   GameUpdatedResponse,
   CountdownStartedResponse,
@@ -14,29 +13,6 @@ export const commandHandlers: {
     Extract<RequestMessagePayload, { command: K }>
   >
 } = {
-  joinGame: ({ gameService, broadcast, data, ws }) => {
-    if (ws.playerName) {
-      throw new Error("You are already in a game!")
-    }
-    if (!ws.gameCode) {
-      throw new Error("You need to connect to a game first!")
-    }
-    const game = gameService.joinGame(data.playerName, ws.gameCode)
-
-    ws.playerName = data.playerName
-
-    broadcast<GameJoinedResponse>({
-      event: "gameJoined",
-      data: game,
-    })
-    if (game.isRoomFilled) {
-      broadcast<GameStartedResponse>({
-        event: "gameStarted",
-        data: game,
-      })
-    }
-  },
-
   makeChoice: ({ ws, data, gameService, broadcast }) => {
     if (!ws.playerName || !ws.gameCode) {
       throw new Error("You need to join the game first!")
@@ -72,12 +48,9 @@ export const commandHandlers: {
     if (!ws.playerName || !ws.gameCode) {
       throw new Error("You need to join the game first!")
     }
-    const requestedRestart = gameService.requestRestart(
-      ws.gameCode,
-      ws.playerName,
-    )
+    const restarted = gameService.requestRestart(ws.gameCode, ws.playerName)
 
-    if (requestedRestart.canRestart) {
+    if (restarted) {
       const game = gameService.getGame(ws.gameCode)
       broadcast<GameStartedResponse>({
         event: "gameStarted",
@@ -86,7 +59,6 @@ export const commandHandlers: {
     } else {
       broadcast<GameWaitingForRestartResponse>({
         event: "gameWaitingForRestart",
-        data: requestedRestart,
       })
     }
   },

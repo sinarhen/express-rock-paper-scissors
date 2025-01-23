@@ -3,8 +3,8 @@ import { PlayerStatuses } from "../types/Player"
 import Player from "./Player"
 
 export type Round = {
-  player1Choice: Choice
-  player2Choice: Choice
+  player1: Player
+  player2: Player
   winnerName: string | null
 }
 export default class Game {
@@ -66,7 +66,6 @@ export default class Game {
     if (!player) {
       throw new Error("Player not found")
     }
-
     player.status = PlayerStatuses.REQUESTED_A_REMATCH
 
     return this.canRestart()
@@ -95,16 +94,15 @@ export default class Game {
     }
     const winner = this.getWinner()
     this.pastRounds.push({
-      player1Choice: this.player1.choice,
-      player2Choice: this.player2.choice,
+      player1: this.player1,
+      player2: this.player2,
       winnerName: winner?.name ?? null,
     })
-    this.resetGame()
   }
 
   public getWinner(): Player | null {
     if (!this.areChoicesMade()) {
-      throw new Error("Both players must make a choice to determine a winner")
+      return null
     }
 
     if (this.player1.choice === this.player2.choice) {

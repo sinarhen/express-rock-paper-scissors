@@ -2,7 +2,7 @@ import { Choice } from "@/domain/types/Game"
 import { GameProgressDto, GameResultsDto } from "@/application/dto/models/game"
 
 export interface IGameService {
-  requestRestart(gameCode: string, playerName: string): GameResultsDto
+  requestRestart(gameCode: string, playerName: string): boolean
   joinGame(playerName: string, code: string): GameProgressDto
   createGame(): string
   getGame(code: string): GameProgressDto
