@@ -93,6 +93,11 @@ export default class Game {
       throw new Error("Both players must make a choice to complete a round")
     }
     const winner = this.getWinner()
+
+    if (winner) {
+      winner.score += 1
+    }
+
     this.pastRounds.push({
       player1: this.player1,
       player2: this.player2,
@@ -112,10 +117,8 @@ export default class Game {
     const player1Won =
       this.player1.choice === Game.winningRules[this.player2.choice]
     if (player1Won) {
-      this.player1.score += 1
       return this.player1
     } else {
-      this.player2.score += 1
       return this.player2
     }
   }

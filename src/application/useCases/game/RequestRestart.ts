@@ -1,3 +1,4 @@
+import { GameMapper } from "@/application/dto/mappers/Game"
 import { BaseGameUseCase } from "./BaseGameUseCase"
 
 export class RequestRestartUseCase extends BaseGameUseCase {
@@ -8,13 +9,8 @@ export class RequestRestartUseCase extends BaseGameUseCase {
       throw new Error("Game is not full")
     }
 
-    const canRestart = game.voteRestart(playerName)
-
-    if (canRestart) {
-      game.resetGame()
-    }
-
-    this.gameRepository.update(game)
-    return canRestart
+    game.voteRestart(playerName)
+    const gameState = this.gameRepository.update(game)
+    return GameMapper.toResultsDto(gameState)
   }
 }

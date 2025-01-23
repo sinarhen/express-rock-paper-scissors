@@ -10,7 +10,7 @@ import {
 } from "@/infrastructure/types/wsMessages"
 
 export const commandHandlers: {
-  [K in RequestMessagePayload["command"]]?: CommandHandlerFunc<
+  [K in RequestMessagePayload["command"]]: CommandHandlerFunc<
     Extract<RequestMessagePayload, { command: K }>
   >
 } = {
@@ -19,7 +19,7 @@ export const commandHandlers: {
       throw new Error("You need to join the game first!")
     }
     const { choice } = data
-    
+
     const game = useCasesImplementations.game
       .setChoice(gameRepository)
       .execute(ws.gameCode, ws.playerName, choice)
@@ -54,22 +54,23 @@ export const commandHandlers: {
     if (!ws.playerName || !ws.gameCode) {
       throw new Error("You need to join the game first!")
     }
-    const restarted = useCasesImplementations.game
+    const gameState = useCasesImplementations.game
       .requestRestart(gameRepository)
       .execute(ws.gameCode, ws.playerName)
 
-    if (restarted) {
-      const game = useCasesImplementations.game
-        .getGame(gameRepository)
+    if (gameState.canRestart) {
+      const restartedGameState = useCasesImplementations.game
+        .confirmRestart(gameRepository)
         .execute(ws.gameCode)
 
       broadcast<GameStartedResponse>({
         event: "gameStarted",
-        data: game,
+        data: restartedGameState,
       })
     } else {
       broadcast<GameWaitingForRestartResponse>({
         event: "gameWaitingForRestart",
+        data: gameState,
       })
     }
   },

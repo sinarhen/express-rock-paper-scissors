@@ -12,6 +12,7 @@ import {
   ConnectPlayerUseCase,
 } from "@/application/useCases/game"
 import { IDatabase } from "./infrastructure/database/interfaces/IDatabase"
+import { ConfirmRestartUseCase } from "./application/useCases/game/ConfirmRestart"
 
 export const dbsImplementations = {
   inMemoryDb: () => new InMemoryDatabase(),
@@ -37,5 +38,7 @@ export const useCasesImplementations = {
       new DisconnectPlayerUseCase(repository),
     connectPlayer: (repository: IGameRepository) =>
       new ConnectPlayerUseCase(repository),
+    confirmRestart: (repository: IGameRepository) =>
+      new ConfirmRestartUseCase(repository),
   },
 }

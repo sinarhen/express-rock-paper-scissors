@@ -1,8 +1,9 @@
 import { envs } from "@/config/envs"
 import { WebSocketServer } from "ws"
 import { Server, IncomingMessage } from "http"
+import { GameWebSocketServer } from "@/infrastructure/types/gameWsServer"
 
-export function webSocketServerConfig(server: Server) {
+export function webSocketServerConfig(server: Server): GameWebSocketServer {
   const wss = new WebSocketServer({ port: envs.WEBSOCKET_PORT })
 
   server.on("upgrade", (req: IncomingMessage, socket, head) => {
@@ -10,5 +11,8 @@ export function webSocketServerConfig(server: Server) {
       wss.emit("connection", ws, req)
     })
   })
-  return wss
+  return {
+    server: wss,
+    clientRooms: new Map(),
+  }
 }

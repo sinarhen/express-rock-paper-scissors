@@ -7,13 +7,6 @@ export interface GameWebSocket extends WebSocket {
   playerName?: string
 }
 
-interface JoinGameMessage {
-  command: "joinGame"
-  data: {
-    playerName: string
-  }
-}
-
 interface MakeChoiceMessage {
   command: "makeChoice"
   data: {
@@ -43,7 +36,7 @@ interface GameUpdatedResponse {
 
 interface GameWaitingForRestartResponse {
   event: "gameWaitingForRestart"
-  // data: GameResultsDto
+  data: GameResultsDto
 }
 
 interface CountdownStartedResponse {
@@ -64,13 +57,9 @@ export type ResponseMessagePayload =
   | WinnerAnnouncedResponse
   | GameWaitingForRestartResponse
 
-export type RequestMessagePayload =
-  | JoinGameMessage
-  | MakeChoiceMessage
-  | RestartGameMessage
+export type RequestMessagePayload = MakeChoiceMessage | RestartGameMessage
 
 export {
-  JoinGameMessage,
   MakeChoiceMessage,
   RestartGameMessage,
   GameJoinedResponse,
