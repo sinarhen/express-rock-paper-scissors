@@ -1,7 +1,8 @@
 import { CommandHandlerFunc } from "@/infrastructure/types/commandHandler"
-import { RequestMessagePayload } from "@/infrastructure/types/wsMessage"
 import { makeChoice } from "./makeChoice"
 import { restartGame } from "./restartGame"
+import { RequestMessagePayload } from "@/infrastructure/types/wsMessage"
+
 export const commandHandlers: {
   [K in RequestMessagePayload["command"]]: CommandHandlerFunc<
     Extract<RequestMessagePayload, { command: K }>
@@ -9,4 +10,5 @@ export const commandHandlers: {
 } = {
   makeChoice,
   restartGame,
+  
 }

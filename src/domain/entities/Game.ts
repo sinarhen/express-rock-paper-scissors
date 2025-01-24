@@ -146,13 +146,10 @@ export default class Game {
       return null // It's a draw
     }
 
-    const player1Won =
-      this.player1.choice === Game.winningRules[this.player2.choice]
-    if (player1Won) {
-      return this.player1
-    } else {
-      return this.player2
-    }
+    const player1Wins =
+      Game.winningRules[this.player1.choice] === this.player2.choice
+
+    return player1Wins ? this.player1 : this.player2
   }
 
   public setChoice(playerName: string, choice: Choice): void {

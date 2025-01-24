@@ -13,10 +13,13 @@ export const addClientToGameRoom = (
     return false
   }
   if (!clientRoom || !clientRoom[0]) {
+    console.log("Setting player 1", ws.gameCode)
     wss.clientRooms.set(gameCode, [ws, undefined])
   } else {
     wss.clientRooms.set(gameCode, [clientRoom[0], ws])
   }
+  const updatedClientRoom = wss.clientRooms.get(gameCode)
+  console.log(updatedClientRoom?.[0], updatedClientRoom?.[1])
 
   return true
 }
