@@ -16,7 +16,7 @@ export class GameController {
       const gameCode = useCasesImplementations.game
         .createGame(this.gameRepository)
         .execute()
-        
+
       res.status(201).json({
         code: gameCode,
       })

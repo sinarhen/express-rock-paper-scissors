@@ -12,7 +12,7 @@ import {
 } from "@/infrastructure/types/wsMessage"
 import { RawData } from "ws"
 
-export class WebSocketController {
+export class GameWebSocketController {
   constructor(
     private readonly gameRepository: IGameRepository,
     private readonly params: { gameCode: string; playerName: string },

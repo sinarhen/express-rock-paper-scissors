@@ -5,7 +5,7 @@ import { createBroadcaster } from "./utils/createBroadcaster"
 import { addClientToGameRoom } from "./utils/addToTheGameRoom"
 import { assignPlayerDataToWsClient } from "./utils/assignPlayerDataToWsClient"
 import { validateJoinedClientParams } from "./utils/validateJoinedClientParams"
-import { WebSocketController } from "@/adapters/websockets/WebsocketController"
+import { GameWebSocketController } from "@/adapters/websockets/GameWebSocketController"
 
 export function wsApi(
   wss: GameWebSocketServer,
@@ -27,7 +27,7 @@ export function wsApi(
       const broadcaster = <TMessage>(msg: TMessage) =>
         createBroadcaster({ msg, wss, gameCode: params.gameCode })
 
-      const controller = new WebSocketController(
+      const controller = new GameWebSocketController(
         deps.gameRepository,
         params,
         broadcaster,
