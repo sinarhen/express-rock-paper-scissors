@@ -19,6 +19,29 @@ export class GameWebSocketController {
     private readonly broadcaster: <TMessage>(msg: TMessage) => void,
   ) {}
 
+  public joinGame() {
+    const { gameCode, playerName } = this.params
+    const game = useCasesImplementations.game
+      .joinGame(this.gameRepository)
+      .execute(playerName, gameCode)
+
+    this.broadcaster<GameJoinedResponse>({
+      event: "gameJoined",
+      data: game,
+    })
+
+    if (game.isRoomFilled) {
+      useCasesImplementations.game
+        .startGame(this.gameRepository)
+        .execute(gameCode)
+
+      this.broadcaster<GameStartedResponse>({
+        event: "gameStarted",
+        data: game,
+      })
+    }
+  }
+
   public handleMessage = (message: RawData) => {
     const { data, command } = JSON.parse(
       message.toString(),
@@ -42,29 +65,6 @@ export class GameWebSocketController {
     useCasesImplementations.game
       .disconnectPlayer(this.gameRepository)
       .execute(gameCode, playerName)
-  }
-
-  public joinGame() {
-    const { gameCode, playerName } = this.params
-    const game = useCasesImplementations.game
-      .joinGame(this.gameRepository)
-      .execute(playerName, gameCode)
-
-    this.broadcaster<GameJoinedResponse>({
-      event: "gameJoined",
-      data: game,
-    })
-
-    if (game.isRoomFilled) {
-      useCasesImplementations.game
-        .startGame(this.gameRepository)
-        .execute(gameCode)
-
-      this.broadcaster<GameStartedResponse>({
-        event: "gameStarted",
-        data: game,
-      })
-    }
   }
 
   private makeChoice = (choice: Choice) => {
